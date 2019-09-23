@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, HttpResponse
 from .models import User, Message, Comment
 import bcrypt
+from django.contrib import messages
 
 
 def loginHomepage(request):
@@ -47,15 +48,40 @@ def successfulLogin(request):
         return redirect('/wall_app')
 
     context = {
-        "user" : User.objects.get(id=request.session['user_id'])
+        "user" : User.objects.get(id=request.session['user_id']),
+         "all_messages" : Message.objects.all()
     }
     
     return render(request, 'wall_app/wallHomepage.html', context)
-        
-def logout(request):
-    request.session.clear()
-    return redirect('/wall_app')
 
 
 def wallHomepage(request):
-    return render(request, 'wall_app/wallHomepage.html')
+
+    if "user_id" not in request.session:
+        return redirect('/wall_app')
+
+    context = {
+        "user" : User.objects.get(id=request.session['user_id']),
+        "all_messages" : Message.objects.all()
+    }
+
+    return render(request, 'wall_app/wallHomepage.html', context)
+
+
+def postMessage(request):
+
+    errors = User.objects.message_validator(request.POST)
+
+    if len(errors) > 0:
+        for key, value in errors.items():
+            messages.error(request, value)
+        return redirect('/wall_app/wall_homepage')
+    else:
+        Message.objects.create(message=request.POST['message'], user_id_id=request.session['user_id'])
+
+    return redirect('wallHomepage')
+
+
+def logout(request):
+    request.session.clear()
+    return redirect('/wall_app')

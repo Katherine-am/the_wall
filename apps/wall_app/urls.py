@@ -7,5 +7,6 @@ urlpatterns = [
     url(r'^login$', views.login, name="loginCheck"),
     url(r'^success$', views.successfulLogin, name="successfulLogin"),
     url(r'^wall_homepage$', views.wallHomepage, name="wallHomepage"),
+    url(r'^post_message$', views.postMessage, name="postMessage"),
     url(r'^logout$', views.logout, name="logout")
 ]

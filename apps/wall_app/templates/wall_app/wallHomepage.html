@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <title>Login & Registration</title>
+    <title>Wall Homepage</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'login_registration/css/style.css' %}">
@@ -26,10 +26,7 @@
                 <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item active">
-                            <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                        </li>
-                        <li class="nav-item active">
-                            <a class="nav-link" href="#">Profile<span class="sr-only">(current)</span></a>
+                            <a class="nav-link" href="#">Hello, {{user.first_name}} <span class="sr-only">(current)</span></a>
                         </li>
                     </ul>
                 </div>
@@ -38,8 +35,40 @@
                 </ul>
             </div>
         </nav>
-
+        
     <div class="container">
     
+    
+    <!-- ERROR CHECK -->
+     {% if messages %}
+     <ul class="messages">
+         {% for message in messages %}
+         <li {% if message.tags %} class="{{ message.tags }}"{% endif %}>{{message}}</li>
+         {% endfor %}
+     </ul>
+     {% endif %} 
+
+        <!-- POST MESSAGE FORM -->
+        <div class="row">
+            <form action="{% url 'postMessage' %}" method="POST" role="form" class="col-sm-12">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="message" class="col-form-label">Post a message:</label>
+                    <div class="">
+                        <textarea class="form-control" name="message" rows="3"></textarea>
+                    </div>
+                </div>
+                <input type="submit" class="btn btn-info float-right" value="Post a message">
+            </form>
+        </div>
+        <div class="row">
+            <div class="col-sm-12">
+                {% for message in all_messages %}
+                <h5>{{message.user_id.first_name}} {{message.user_id.last_name}} - {{message.created_at}}</h5>
+                {{message.message}}
+                {% endfor %}
+            </div>  
+        </div>
+    </div>
 </body>
 </html>

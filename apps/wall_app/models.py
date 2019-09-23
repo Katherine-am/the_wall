@@ -45,6 +45,23 @@ class UserManager(models.Manager):
 
         return errors
 
+    def message_validator(self, postData):
+        errors = {}
+
+        if len(postData['message']) < 1:
+            errors["message"] = "Message cannot be empty."
+
+        return errors
+
+    def comment_validator(self, postData):
+        errors = {}
+
+        if len(postData['messagePost']) < 1:
+            errors["messagePost"] = "Message cannot be empty."
+
+        return errors
+
+
 class User(models.Model):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
