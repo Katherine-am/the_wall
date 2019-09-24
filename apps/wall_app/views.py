@@ -49,7 +49,7 @@ def successfulLogin(request):
 
     context = {
         "user" : User.objects.get(id=request.session['user_id']),
-         "all_messages" : Message.objects.all()
+        "all_messages" : Message.objects.all()
     }
     
     return render(request, 'wall_app/wallHomepage.html', context)
@@ -79,6 +79,19 @@ def postMessage(request):
     else:
         Message.objects.create(message=request.POST['message'], user_id_id=request.session['user_id'])
 
+    return redirect('wallHomepage')
+
+def postComment(request):
+
+    errors = User.objects.comment_validator(request.POST)
+
+    if len(errors) > 0:
+        for key, value in errors.items():
+            messages.error(request, value)
+        return redirect('/wall_app/wall_homepage')
+    else:
+        Comment.objects.create(comment=request.POST['comment'], user_id_id=request.session['user_id'], message_id_id=request.POST['message_id'])
+    
     return redirect('wallHomepage')
 
 

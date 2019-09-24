@@ -56,8 +56,8 @@ class UserManager(models.Manager):
     def comment_validator(self, postData):
         errors = {}
 
-        if len(postData['messagePost']) < 1:
-            errors["messagePost"] = "Message cannot be empty."
+        if len(postData['comment']) < 1:
+            errors["comment"] = "Comment cannot be empty."
 
         return errors
 
